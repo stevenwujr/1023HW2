@@ -24,7 +24,7 @@ https://stevenwujr.github.io/1023HW2/
    - 🌊 **Problem 1 (Kaggle S4E5):** 洪水機率預測 (`Flood Probability`，20 特徵，連續標籤)
    - 🏢 **Problem 2 (Kaggle Istanbul):** 伊斯坦堡公寓房價預測 (`Price`，18 特徵，連續標籤)
 2. **加總分 2分：可任意輸入 Dataset**
-   - 🌐 支援直接輸入任何線上 CSV 網址（預載作業範例 `https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv`）
+   - 🌐 支援直接輸入任何線上 CSV 網址（例如 `https://raw.githubusercontent.com/selva86/datasets/master/Cars93.csv`）
    - 📁 支援本地 CSV 檔案上傳（拖曳或自選）
    - 系統自動解析欄位型態、提供目標變數選單、自動執行填補與回歸訓練！
 
@@ -44,7 +44,7 @@ https://stevenwujr.github.io/1023HW2/
 ├── data/
 │   ├── flood_prediction_sample.csv    # Kaggle 洪水機率預測資料集 (20 特徵)
 │   ├── istanbul_apartment_sample.csv  # Kaggle 伊斯坦堡房價資料集 (18 特徵)
-│   └── 50_Startups.csv               # 經典 50 Startups 測試資料集
+│   └── life_expectancy_sample.csv     # Kaggle WHO 預期壽命資料集 (20 特徵)
 └── README.md                # 專案詳細說明文件
 ```
 
