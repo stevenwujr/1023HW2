@@ -4,6 +4,10 @@
 > **學號：** `7115056112`  
 > **交件標準：** GitHub 儲存庫 + 互動式 Web 應用程式 (支援 GitHub Pages 直接部署)
 
+https://stevenwujr.github.io/1023HW2/
+
+![hw2screenshot](hw2screenshot.png)
+
 [![CRISP-DM Compliant](https://img.shields.io/badge/CRISP--DM-6%20Phases-6366f1.svg)](#crisp-dm-流程架構)
 [![Kaggle Dataset](https://img.shields.io/badge/Kaggle-Playground%20s4e5-06b6d4.svg)](https://www.kaggle.com/competitions/playground-series-s4e5)
 [![Bonus Points](https://img.shields.io/badge/Bonus-加總分%203%20分滿分-10b981.svg)](#-作業加分項目實作說明)
