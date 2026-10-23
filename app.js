@@ -699,7 +699,7 @@ const DataProcessor = {
 // ==========================================
 const App = {
   state: {
-    currentProblem: 'flood', // 'flood', 'istanbul', 'startups', 'custom_url', 'custom_upload'
+    currentProblem: 'flood', // 'flood', 'istanbul', 'life', 'custom_url', 'custom_upload'
     rawCSV: '',
     header: [],
     rawRows: [],
@@ -876,7 +876,7 @@ const App = {
       // Show URL input bar
       const urlInput = document.getElementById('datasetUrlInput');
       if (urlInput && !urlInput.value) {
-        urlInput.value = 'https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv';
+        urlInput.value = 'https://raw.githubusercontent.com/selva86/datasets/master/Cars93.csv';
       }
     }
   },
@@ -961,16 +961,26 @@ const App = {
         ].join(','));
       }
     } else {
-      lines.push('R&D Spend,Administration,Marketing Spend,State,Profit');
-      lines.push('165349.2,136897.8,471784.1,New York,192261.83');
-      lines.push('162597.7,151377.59,443898.53,California,191792.06');
-      lines.push('153441.51,101145.55,407934.54,Florida,191050.39');
-      lines.push('144372.41,118671.85,383199.62,New York,182901.99');
-      lines.push('142107.34,91391.77,366168.42,Florida,166187.94');
-      lines.push('131876.9,99814.71,362861.36,California,156991.12');
-      lines.push('134615.46,147198.87,127716.82,California,156122.51');
-      lines.push('130298.13,145530.06,323876.68,Florida,155752.6');
-      lines.push('120542.52,148711.48,311613.29,New York,152211.77');
+      const features = [
+        'Adult_Mortality', 'infant_deaths', 'Alcohol', 'percentage_expenditure',
+        'Hepatitis_B', 'Measles', 'BMI', 'under_five_deaths', 'Polio',
+        'Total_expenditure', 'Diphtheria', 'HIV_AIDS', 'GDP', 'Population',
+        'thinness_10_19_years', 'thinness_5_9_years', 'Income_composition_of_resources',
+        'Schooling', 'Sanitation_Access_Rate', 'Health_Care_Index'
+      ];
+      lines.push([...features, 'Life_expectancy'].join(','));
+      for (let i = 0; i < 400; i++) {
+        const row = [];
+        let life = 62.0;
+        for (let j = 0; j < 20; j++) {
+          const v = (Math.random() * 50 + 10).toFixed(1);
+          row.push(v);
+          life += (j % 2 === 0 ? 0.15 : -0.12) * parseFloat(v);
+        }
+        life = Math.min(88, Math.max(45, life)).toFixed(2);
+        row.push(life);
+        lines.push(row.join(','));
+      }
     }
     this.processRawCSV(lines.join('\n'), defaultTarget);
   },

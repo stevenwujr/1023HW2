@@ -1,6 +1,6 @@
 /**
  * Dataset Configurations for Multiple Linear Regression (CRISP-DM)
- * Strictly adheres to 13 < Features < 40 (Does NOT use 50_Startups or Boston Housing as main problem)
+ * Strictly adheres to 13 < Features < 40 (Kaggle Datasets with 14-39 features)
  */
 
 window.DATASET_CONFIGS = {

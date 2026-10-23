@@ -66,7 +66,7 @@
             <option value="flood" selected>🌊 Kaggle Problem 1: 洪水機率預測 (20 Features, S4E5)</option>
             <option value="istanbul">🏢 Kaggle Problem 2: 伊斯坦堡房價預測 (18 Features)</option>
             <option value="life">🏥 Kaggle Problem 3: WHO 預期壽命預測 (20 Features)</option>
-            <option value="custom_url">🌐 加分項: 任意輸入 Dataset URL (如 50_Startups.csv)</option>
+            <option value="custom_url">🌐 加分項: 任意輸入 Dataset URL (線上 CSV 網址)</option>
             <option value="custom_upload">📁 上傳本地 CSV 檔案 (支援拖曳與自選)</option>
           </select>
         </div>
@@ -75,7 +75,7 @@
         <div id="urlInputContainer" class="control-group" style="display: none; flex: 1;">
           <label class="control-label" for="datasetUrlInput">Dataset URL：</label>
           <input type="text" id="datasetUrlInput" class="input-custom" style="flex: 1; min-width: 280px;"
-            value="https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv"
+            value="https://raw.githubusercontent.com/selva86/datasets/master/Cars93.csv"
             placeholder="請輸入 CSV 檔案網址 (如 GitHub Raw / Kaggle Direct URL)">
           <button id="btnLoadUrl" class="btn btn-accent">📥 載入資料</button>
         </div>

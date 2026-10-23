@@ -166,7 +166,7 @@
     本次作業延伸自 HW1，遵循國際標準 <strong>CRISP-DM (Cross-Industry Standard Process for Data Mining)</strong> 流程，以 Kaggle 公開資料集 <strong>Playground Series s4e5（Predict the Flood）</strong> 為主體（輸入特徵數為 <strong>20 個連續數值特徵</strong>，完全符合題目大於 13 且小於 40 的嚴格限制），進行多元線性回歸模型之全流程構建、特徵選擇 (Feature Selection)、模型評估 (Model Evaluation) 與古典回歸五大基本假設診斷。
   </p>
   <p>
-    系統額外實作了兩項加分目標：<strong>(1) 下拉視窗切換呈現兩種 Problem（Kaggle 洪水機率預測 20 特徵 與 伊斯坦堡公寓房價預測 18 特徵）；(2) 支援任意輸入 Dataset 網址（如 50_Startups.csv）及本機 CSV 上傳</strong>。模型評估部分精確繪製了 <strong>預測圖並疊加 95% 信賴區間 (Confidence Interval) 與 95% 預測區間 (Prediction Interval)</strong>，並深度檢驗殘差常態性、同質變異性、Durbin-Watson 獨立性與 VIF 多重共線性。
+    系統額外實作了兩項加分目標：<strong>(1) 下拉視窗切換呈現兩種 Problem（Kaggle 洪水機率預測 20 特徵 與 伊斯坦堡公寓房價預測 18 特徵）；(2) 支援任意輸入 Dataset 網址（如線上 Cars93 等 CSV）及本機 CSV 上傳</strong>。模型評估部分精確繪製了 <strong>預測圖並疊加 95% 信賴區間 (Confidence Interval) 與 95% 預測區間 (Prediction Interval)</strong>，並深度檢驗殘差常態性、同質變異性、Durbin-Watson 獨立性與 VIF 多重共線性。
   </p>
 
   <h2 class="section-title">二、CRISP-DM 流程詳解</h2>
@@ -334,10 +334,10 @@
       • <strong>Problem 2: Kaggle 伊斯坦堡公寓房價預測 (Istanbul Apartment Prices - 18 Features)</strong><br>
       切換時自動重新載入特徵、重繪相關性熱力圖、更新 CRISP-DM 流程並重新訓練模型。
     </p>
-    <p style="margin-top: 10px;"><strong>✅ 加總分 2分：可任意輸入 Dataset (如 50_Startups.csv)</strong></p>
+    <p style="margin-top: 10px;"><strong>✅ 加總分 2分：可任意輸入 Dataset (支援線上 CSV 網址)</strong></p>
     <p style="margin-left: 14px;">
       選單支援「任意輸入 Dataset URL」與「本地 CSV 上傳」：<br>
-      • 預設支援作業提及之 <code>https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv</code>；<br>
+      • 預設支援線上資料集如 <code>https://raw.githubusercontent.com/selva86/datasets/master/Cars93.csv</code> (27 特徵)；<br>
       • 自動辨識類別與數值欄位，動態建立下拉選單讓使用者自由選取目標變數 (Target)，全自動執行資料清理與多元回歸分析！
     </p>
   </div>
