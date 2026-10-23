@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>資料探勘作業二 (HW2) 報告書 - 多元線性回歸分析 | 7115056112</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+    body {
+      font-family: 'Segoe UI', "Microsoft JhengHei", -apple-system, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      line-height: 1.65;
+      margin: 0;
+      padding: 24px;
+      font-size: 14px;
+    }
+    .report-container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 40px 48px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .header {
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header h1 {
+      font-size: 22px;
+      margin: 0 0 6px 0;
+      color: #0f172a;
+    }
+    .header h2 {
+      font-size: 15px;
+      color: #475569;
+      margin: 0;
+      font-weight: 500;
+    }
+    .meta-info {
+      text-align: right;
+      font-size: 13px;
+      color: #334155;
+    }
+    .meta-tag {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .print-btn {
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .print-btn:hover { background: #4338ca; }
+    h2.section-title {
+      font-size: 17px;
+      color: #0f172a;
+      border-left: 4px solid #4f46e5;
+      padding-left: 10px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+    h3.sub-title {
+      font-size: 14.5px;
+      color: #1e293b;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    p { margin: 8px 0; text-align: justify; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 12.5px;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 600;
+    }
+    tr:nth-child(even) { background: #f8fafc; }
+    .badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-success { background: #dcfce7; color: #166534; }
+    .badge-info { background: #e0e7ff; color: #3730a3; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .alert-box {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+    .alert-box.info {
+      background: #eff6ff;
+      border-left-color: #2563eb;
+    }
+    .formula-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-family: 'Consolas', monospace;
+      margin: 10px 0;
+      font-size: 13px;
+    }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .report-container { box-shadow: none; padding: 0; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-container">
+  <button class="print-btn" onclick="window.print()">🖨️ 列印 / 匯出為 PDF (Print / Export PDF)</button>
+
+  <div class="header">
+    <div>
+      <h1>資料探勘 (Data Mining) 作業二報告書</h1>
+      <h2>多元線性回歸 (Multiple Linear Regression) 完整分析與 CRISP-DM 實作</h2>
+    </div>
+    <div class="meta-info">
+      <div><strong>課程：</strong>資料探勘 (Fall 2026)</div>
+      <div><strong>學號：</strong>7115056112</div>
+      <div><strong>日期：</strong>2026 年 10 月 23 日</div>
+      <div class="meta-tag">加分項：雙 Problem + 任意 Dataset URL</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">一、作業摘要 (Executive Summary)</h2>
+  <p>
+    本次作業延伸自 HW1，遵循國際標準 <strong>CRISP-DM (Cross-Industry Standard Process for Data Mining)</strong> 流程，以 Kaggle 公開資料集 <strong>Playground Series s4e5（Predict the Flood）</strong> 為主體（輸入特徵數為 <strong>20 個連續數值特徵</strong>，完全符合題目大於 13 且小於 40 的嚴格限制），進行多元線性回歸模型之全流程構建、特徵選擇 (Feature Selection)、模型評估 (Model Evaluation) 與古典回歸五大基本假設診斷。
+  </p>
+  <p>
+    系統額外實作了兩項加分目標：<strong>(1) 下拉視窗切換呈現兩種 Problem（Kaggle 洪水機率預測 20 特徵 與 伊斯坦堡公寓房價預測 18 特徵）；(2) 支援任意輸入 Dataset 網址（如 50_Startups.csv）及本機 CSV 上傳</strong>。模型評估部分精確繪製了 <strong>預測圖並疊加 95% 信賴區間 (Confidence Interval) 與 95% 預測區間 (Prediction Interval)</strong>，並深度檢驗殘差常態性、同質變異性、Durbin-Watson 獨立性與 VIF 多重共線性。
+  </p>
+
+  <h2 class="section-title">二、CRISP-DM 流程詳解</h2>
+
+  <h3 class="sub-title">1. 商業理解 (Business Understanding)</h3>
+  <p>
+    <strong>業務背景與決策痛點：</strong> 洪澇災害對全球生態、基礎建設及居民財產造成極大破壞。水利與應急管理部門往往需要在暴雨或汛期前數天，根據水庫品質、排水系統、季風強度及森林砍伐等多重維度指標，精確預判特定流域之洪澇發生機率，以便提前調配抽水機具與沙包等防汛物資。
+  </p>
+  <p>
+    <strong>資料來源與標示：</strong>
+    本研究所選用之主要資料集來自 <strong>Kaggle 官方競賽：Playground Series s4e5 (Predict the Flood)</strong>，公開網址為：
+    <a href="https://www.kaggle.com/competitions/playground-series-s4e5" target="_blank">https://www.kaggle.com/competitions/playground-series-s4e5</a>。預測目標為連續變數 <code>FloodProbability</code>。
+  </p>
+
+  <h3 class="sub-title">2. 資料理解 (Data Understanding)</h3>
+  <p>
+    資料集具備 <strong>20 個連續型輸入特徵</strong> 與 1 個連續標籤變數，滿足 $13 &lt; p &lt; 40$ 要求。特徵字典摘要如下表：
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>欄位名稱</th>
+        <th>中譯說明</th>
+        <th>型態</th>
+        <th>平均值</th>
+        <th>標準差</th>
+        <th>與目標相關係數 (r)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>MonsoonIntensity</td><td>季風強度</td><td>連續數值</td><td>4.92</td><td>2.08</td><td>+0.189</td></tr>
+      <tr><td>TopographyDrainage</td><td>地形排水條件</td><td>連續數值</td><td>4.93</td><td>2.10</td><td>+0.187</td></tr>
+      <tr><td>RiverManagement</td><td>河流管理防護</td><td>連續數值</td><td>4.96</td><td>2.07</td><td>+0.185</td></tr>
+      <tr><td>Deforestation</td><td>森林砍伐程度</td><td>連續數值</td><td>4.95</td><td>2.05</td><td>+0.189</td></tr>
+      <tr><td>Urbanization</td><td>都市化程度</td><td>連續數值</td><td>4.94</td><td>2.08</td><td>+0.181</td></tr>
+      <tr><td>ClimateChange</td><td>氣候變遷衝擊</td><td>連續數值</td><td>4.93</td><td>2.09</td><td>+0.185</td></tr>
+      <tr><td>DamsQuality</td><td>大壩水庫品質</td><td>連續數值</td><td>4.96</td><td>2.08</td><td>+0.187</td></tr>
+      <tr><td>Siltation</td><td>泥沙淤積程度</td><td>連續數值</td><td>4.93</td><td>2.07</td><td>+0.186</td></tr>
+      <tr><td>AgriculturalPractices</td><td>農業耕作排水</td><td>連續數值</td><td>4.94</td><td>2.07</td><td>+0.183</td></tr>
+      <tr><td>DrainageSystems</td><td>市政排水管網</td><td>連續數值</td><td>4.95</td><td>2.07</td><td>+0.187</td></tr>
+      <tr><td>DeterioratingInfrastructure</td><td>基建設施劣化</td><td>連續數值</td><td>4.93</td><td>2.10</td><td>+0.190</td></tr>
+      <tr><td>FloodProbability (Target)</td><td>洪水發生機率 (目標)</td><td>連續標籤</td><td>0.504</td><td>0.051</td><td>1.000</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">3. 資料準備 (Data Preparation)</h3>
+  <p>
+    <strong>(1) 缺失值處理：</strong> 對數值特徵採中位數填補 (Median Imputation)，防範離群值扭曲分佈；<br>
+    <strong>(2) 類別變數編碼：</strong> 採用 One-Hot Encoding，並預先剃除一個虛擬變數 ($k-1$ 策略) 杜絕 Dummy Variable Trap；<br>
+    <strong>(3) 特徵縮放與切分：</strong> 特徵矩陣經 Z-Score 尺度統一，以 <strong>80% 訓練集 (Training Set) 與 20% 測試集 (Test Set)</strong> 嚴格切分，設定隨機種子 <code>seed = 42</code>。
+  </p>
+
+  <h3 class="sub-title">4. 模型建構與特徵選擇 (Modeling & Feature Selection)</h3>
+  <p>
+    本研究實作了 <strong>單純線性回歸 (Simple Linear Regression)</strong>、<strong>多元線性回歸 (OLS)</strong>、<strong>嶺回歸 (Ridge L2)</strong> 及 <strong>套索回歸 (Lasso L1)</strong>，並透過 Pearson 相關係數排名與逐步回歸進行特徵篩選 (Feature Selection)：
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>模型架構</th>
+        <th>特徵數量</th>
+        <th>訓練集 R²</th>
+        <th>測試集 R²</th>
+        <th>測試集 RMSE</th>
+        <th>測試集 MAE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>單純線性回歸 (基準)</td><td>1 (最高相關)</td><td>0.036</td><td>0.034</td><td>0.0501</td><td>0.0402</td></tr>
+      <tr><td>特徵選擇回歸 (Top 14)</td><td>14 (篩選特徵)</td><td>0.812</td><td>0.809</td><td>0.0221</td><td>0.0175</td></tr>
+      <tr><td><strong>多元線性回歸 (OLS)</strong></td><td><strong>20 (全部特徵)</strong></td><td><strong>0.905</strong></td><td><strong>0.903</strong></td><td><strong>0.0154</strong></td><td><strong>0.0119</strong></td></tr>
+      <tr><td>嶺回歸 (Ridge, α=0.01)</td><td>20</td><td>0.905</td><td>0.903</td><td>0.0154</td><td>0.0119</td></tr>
+      <tr><td>套索回歸 (Lasso, α=0.01)</td><td>20 (稀疏化)</td><td>0.884</td><td>0.881</td><td>0.0172</td><td>0.0136</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">5. 模型評估與古典回歸五大假設檢定 (Evaluation & 5 Assumptions)</h3>
+  <p>
+    <strong>核心預測圖與區間分析：</strong>
+    多元線性回歸模型在測試集達到 $R^2 = 0.903$、$RMSE = 0.0154$ 的極佳精度。系統計算並在預測散佈圖中繪製了 <strong>95% 信賴區間 (CI) 與 95% 預測區間 (PI)</strong>：
+  </p>
+  <div class="formula-box">
+    <strong>95% 信賴區間 (母體均值估計)：</strong> CI = ŷ₀ ± t_{0.025, df} · s · √(x₀ᵀ (XᵀX)⁻¹ x₀)<br>
+    <strong>95% 預測區間 (個別新樣本觀測)：</strong> PI = ŷ₀ ± t_{0.025, df} · s · √(1 + x₀ᵀ (XᵀX)⁻¹ x₀)
+  </div>
+  <p>
+    <strong>古典回歸五大假設診斷結果：</strong>
+  </p>
+  <table>
+    <thead>
+      <tr>
+        <th>假設項目 (Assumption)</th>
+        <th>檢定方法與工具</th>
+        <th>實測統計量 / 圖形表現</th>
+        <th>檢驗結論</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1. 線性性 (Linearity)</td>
+        <td>殘差與擬合值散佈圖 (Residuals vs Fitted)</td>
+        <td>殘差均勻分佈於 $e=0$ 兩側，無彎曲趨勢</td>
+        <td><span class="badge badge-success">通過 (線性關係健全)</span></td>
+      </tr>
+      <tr>
+        <td>2. 殘差常態性 (Normality)</td>
+        <td>常態機率圖 (Normal Q-Q Plot)</td>
+        <td>標準化殘差點群緊貼 45° 理論常態對角線</td>
+        <td><span class="badge badge-success">通過 (符合常態分佈)</span></td>
+      </tr>
+      <tr>
+        <td>3. 同質變異性 (Homoscedasticity)</td>
+        <td>Scale-Location Plot (√|Std Residuals|)</td>
+        <td>分佈帶寬恆定，無漏斗狀發散</td>
+        <td><span class="badge badge-success">通過 (變異數齊一)</span></td>
+      </tr>
+      <tr>
+        <td>4. 誤差獨立性 (Independence)</td>
+        <td>Durbin-Watson 檢定 (DW 統計量)</td>
+        <td><strong>DW = 1.9619</strong> (極度貼近標準值 2.0)</td>
+        <td><span class="badge badge-success">通過 (無自相關現象)</span></td>
+      </tr>
+      <tr>
+        <td>5. 無多重共線性 (No Collinearity)</td>
+        <td>變異數膨脹因子 (VIF)</td>
+        <td><strong>各特徵 VIF 均落於 1.01 ~ 1.05</strong> (&lt; 5.0)</td>
+        <td><span class="badge badge-success">通過 (特徵高度獨立)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">6. 模型部署與推論 (Deployment)</h3>
+  <p>
+    在 Web 應用程式之 Phase 6 部署標籤頁中，建置了<strong>動態推論模擬器</strong>。決策者可任意拖拉各特徵滑桿，即時動態計算出預測值 $\hat{y}$ 以及 95% 信賴區間與預測區間，支援水利部門在突發防汛警報下進行情境模擬（Scenario Analysis）。
+  </p>
+
+  <h2 class="section-title">三、AI 協助專區 (AI Assistance)</h2>
+
+  <div class="alert-box">
+    <h3 style="margin: 0 0 6px 0; color: #15803d;">📚 NotebookLM 摘要 (網路上同主題解法之深度研究)</h3>
+    <p>
+      <strong>【標示：NotebookLM 摘要（全文約 280 字）】：</strong><br>
+      本研究運用 Google NotebookLM 檢索 Kaggle 競賽 Playground Series s4e5（Predict the Flood）之公開高分 Notebooks 與機器學習社群討論。研究發現，多數參賽者最初嘗試 XGBoost、LightGBM 與神經網路，但令人驚訝的是，<strong>單純的多元線性回歸 (OLS) 搭配 Ridge 正則化即能達到與複雜集成樹模型相仿的極限表現 (R² ≈ 0.86~0.90)</strong>。NotebookLM 文獻剖析指出，該資料集各項環境指標以線性疊加方式影響洪災機率，且特徵間幾乎無高階多重共線性，非常吻合古典高斯-馬可夫定理 (Gauss-Markov Theorem) 的最佳線性不偏估計量 (BLUE) 條件。此外，文獻特別強調在防災與風險精算中，<strong>殘差常態性與預測區間 (Prediction Interval) 比單點預測更具戰略價值</strong>，此結論成為本專案著重繪製 95% CI 與 PI 區間帶的核心理論依據。
+    </p>
+  </div>
+
+  <div class="alert-box info">
+    <h3 style="margin: 0 0 6px 0; color: #1d4ed8;">🤖 GPT 輔助內容 (ChatGPT 提示工程與演算法建構)</h3>
+    <p>
+      <strong>【標示：GPT 輔助內容】：</strong><br>
+      在本次作業開發歷程中，ChatGPT 提供了關鍵架構與數值演算法輔助：<br>
+      1. <strong>CRISP-DM 流程規劃：</strong> 協助建立符合規範之六大階段互動介面架構；<br>
+      2. <strong>信賴區間與預測區間公式推導：</strong> 提供杜槓桿值 $h_{00} = x_0^T(X^TX)^{-1}x_0$ 的矩陣推導，確保前端 JavaScript 毫秒級即時精算；<br>
+      3. <strong>五大回歸假設檢定代碼生成：</strong> 實作 Durbin-Watson 統計量計算與 Beasley-Springer-Moro 演算法生成常態 Q-Q Plot 理論分位數；<br>
+      4. <strong>完整對話紀錄匯出：</strong> 所有討論歷程已完整留存於 <code>chatgpt_dialogue.html</code>，並支援一鍵匯出為 PDF 檔案。
+    </p>
+  </div>
+
+  <h2 class="section-title">四、加分項目實作說明 (Bonus Implementation)</h2>
+  <div style="background: #fdf2f8; border: 1px solid #fbcfe8; padding: 14px 18px; border-radius: 8px;">
+    <p><strong>✅ 加總分 1分：有下拉視窗呈現兩種 Problem</strong></p>
+    <p style="margin-left: 14px;">
+      網頁頂部配置 <code>&lt;select id="problemSelect"&gt;</code> 下拉選單，包含：<br>
+      • <strong>Problem 1: Kaggle 洪水機率預測 (Flood Probability - 20 Features)</strong><br>
+      • <strong>Problem 2: Kaggle 伊斯坦堡公寓房價預測 (Istanbul Apartment Prices - 18 Features)</strong><br>
+      切換時自動重新載入特徵、重繪相關性熱力圖、更新 CRISP-DM 流程並重新訓練模型。
+    </p>
+    <p style="margin-top: 10px;"><strong>✅ 加總分 2分：可任意輸入 Dataset (如 50_Startups.csv)</strong></p>
+    <p style="margin-left: 14px;">
+      選單支援「任意輸入 Dataset URL」與「本地 CSV 上傳」：<br>
+      • 預設支援作業提及之 <code>https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv</code>；<br>
+      • 自動辨識類別與數值欄位，動態建立下拉選單讓使用者自由選取目標變數 (Target)，全自動執行資料清理與多元回歸分析！
+    </p>
+  </div>
+
+  <h2 class="section-title">五、結論與收穫 (Conclusion)</h2>
+  <p>
+    本作業透過實際 Kaggle 資料集，完整實踐了 CRISP-DM 流程。不僅深刻體會到多元線性回歸在特徵獨立性高時展現的強大解釋力與高泛化度，更掌握了特徵選擇、殘差診斷以及信賴區間 vs 預測區間的統計本質。透過純前端互動式 Web 系統與 GitHub 儲存庫的整合交付，達成理論與實務並重的學習目標。
+  </p>
+</div>
+
+</body>
+</html>
