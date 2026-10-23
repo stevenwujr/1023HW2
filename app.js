@@ -870,8 +870,8 @@ const App = {
       await this.loadLocalDataset('data/flood_prediction_sample.csv', 'FloodProbability');
     } else if (probKey === 'istanbul') {
       await this.loadLocalDataset('data/istanbul_apartment_sample.csv', 'Price');
-    } else if (probKey === 'startups') {
-      await this.loadLocalDataset('data/50_Startups.csv', 'Profit');
+    } else if (probKey === 'life') {
+      await this.loadLocalDataset('data/life_expectancy_sample.csv', 'Life_expectancy');
     } else if (probKey === 'custom_url') {
       // Show URL input bar
       const urlInput = document.getElementById('datasetUrlInput');
@@ -1104,6 +1104,17 @@ const App = {
       if (linkElem) {
         linkElem.href = "https://www.kaggle.com/datasets/brahimenesulusoy/istanbul-apartment-prices-2026";
         linkElem.innerText = "Kaggle: Istanbul Apartment Prices 2026";
+      }
+    } else if (prob === 'life') {
+      if (titleElem) titleElem.innerText = "🏥 Kaggle Problem 3: WHO 國家預期壽命預測 (Life Expectancy)";
+      if (descElem) descElem.innerHTML = `
+        <p><strong>背景介紹：</strong>世界衛生組織 (WHO) 全球健康與預期壽命公開資料集，包含<strong>20項醫療衛生支出、各類疫苗接種率、成人死亡率與 GDP 經濟指標</strong>預測國家人民平均壽命 (Life_expectancy)。</p>
+        <p><strong>商業與公衛決策價值：</strong>透過特徵係數解析，量化基礎教育、疫苗普及率與醫療資源分配對延長壽命的邊際效應，協助各國公衛組織制定精準衛教與醫療援助策略。</p>
+      `;
+      if (targetElem) targetElem.innerHTML = `<strong>連續預測目標：</strong> <code>Life_expectancy</code> (歲數，連續數值)`;
+      if (linkElem) {
+        linkElem.href = "https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who";
+        linkElem.innerText = "Kaggle: WHO Life Expectancy Dataset";
       }
     } else {
       if (titleElem) titleElem.innerText = `自訂/線上資料集：${this.state.targetName} 回歸預測`;
